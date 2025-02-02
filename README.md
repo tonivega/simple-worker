@@ -1,6 +1,7 @@
 # Bluengo Simple Worker
 Poor's man, yet effective, job queue/worker. Should run fine as is in modern Linux releases.
 
+**See our office webcam at [https://www.bluengo.com](https://www.bluengo.com)**
 
 Bluengo Simple Worker is a lightweight distributed job processing system written in Go. It consists of three subcommands:
 
