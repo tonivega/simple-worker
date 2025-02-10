@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - feature1
 
 env:
   AWS_REGION: eu-central-1
@@ -30,8 +31,8 @@ jobs:
 
       - name: Build Docker Images
         run: |
-          docker build -t $AWS_ECR_URL:app-bluengo-server -f ./Dockerfile_server .
-          docker build -t $AWS_ECR_URL:app-bluengo-worker -f ./Dockerfile_worker .
+          docker build -t $AWS_ECR_URL:app-bluengo-server -f ./Dockerfile.server .
+          docker build -t $AWS_ECR_URL:app-bluengo-worker -f ./Dockerfile.worker .
 
       - name: Push Docker Images to ECR
         run: |
