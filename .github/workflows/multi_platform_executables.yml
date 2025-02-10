@@ -24,7 +24,8 @@ jobs:
       with:
         go-version: '1.23.6'
 
-    - name: Install dependencies
+    - name: Install dependencies (Linux only)
+      if: matrix.os == 'linux'
       run: |
         sudo apt-get update
         sudo apt-get install -y gcc libc6-dev
@@ -35,7 +36,7 @@ jobs:
         echo "Built bluengo-${{ matrix.os }}-${{ matrix.arch }}"
 
     - name: Upload the artifact (executables)
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: bluengo-executables
         path: bluengo-${{ matrix.os }}-${{ matrix.arch }}
