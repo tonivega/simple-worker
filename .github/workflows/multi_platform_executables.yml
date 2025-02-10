@@ -1,0 +1,41 @@
+name: Build Executables for Multiple Platforms
+
+on:
+  push:
+    branches:
+    - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [ linux, windows ] # Sistema operativo
+        arch: [ amd64, arm64 ] # Arquitectura
+      fail-fast: false
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.23.6'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc libc6-dev
+
+    - name: Build executable for ${{ matrix.os }}-${{ matrix.arch }}
+      run: |
+        GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o bluengo-${{ matrix.os }}-${{ matrix.arch }} .
+        echo "Built bluengo-${{ matrix.os }}-${{ matrix.arch }}"
+
+    - name: Upload the artifact (executables)
+      uses: actions/upload-artifact@v3
+      with:
+        name: bluengo-executables
+        path: bluengo-${{ matrix.os }}-${{ matrix.arch }}
