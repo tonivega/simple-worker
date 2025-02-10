@@ -61,7 +61,8 @@ create-release:
       body: "Automated release for version ${{ github.ref }}"
       draft: false
       prerelease: false
-      token: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   - name: Upload Executables to Release
     uses: actions/upload-release-asset@v1
@@ -69,4 +70,4 @@ create-release:
       upload_url: ${{ steps.create-release.outputs.upload_url }}
       asset_path: bluengo-executables/*
       asset_name: bluengo-${{ matrix.os }}-${{ matrix.arch }}
-      asset_content_type: application/octet-stream
+      asset_content_type: application/gzip
