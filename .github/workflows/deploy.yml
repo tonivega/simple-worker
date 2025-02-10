@@ -30,7 +30,6 @@ jobs:
 
       - name: Build Docker Images
         run: |
-          cd app-simple-worker
           docker build -t $AWS_ECR_URL:app-bluengo-server -f ./Dockerfile_server .
           docker build -t $AWS_ECR_URL:app-bluengo-worker -f ./Dockerfile_worker .
 
