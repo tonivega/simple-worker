@@ -39,4 +39,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: bluengo-executables
-        path: bluengo-${{ matrix.os }}-${{ matrix.arch }}
+        path: bluengo-executables/bluengo-${{ matrix.os }}-${{ matrix.arch }}
