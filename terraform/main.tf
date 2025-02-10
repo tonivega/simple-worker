@@ -1,11 +1,11 @@
 # -------------------------------------------------
 # ----------------- Module ECR --------------------
 # -------------------------------------------------
-module "module_ecr" {
-  source               = "./modules/module_ecr"
-  repository_name      = var.repository_name
-  image_tag_mutability = var.image_tag_mutability
-}
+ module "module_ecr" {
+   source               = "./modules/module_ecr"
+   repository_name      = var.repository_name
+   image_tag_mutability = var.image_tag_mutability
+ }
 
 # -------------------------------------------------
 # ----------------- Module EC2 --------------------
