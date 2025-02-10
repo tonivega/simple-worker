@@ -1,0 +1,25 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+
+jobs:
+  build-and-releases:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and Push Docker Images
+        run: |
+          # Verificar ubicacion actual
+          pwd
+          ls -la
+
+          # Construir imagenes
+          docker build -t $AWS_ECR_URL:bluengo-server -f Dockerfile.server .
+          docker build -t $AWS_ECR_URL:bluengo-worker -f Dockerfile.worker .
+
+          # Push imagenes
+          docker push $AWS_ECR_URL:bluengo-server
+          docker push $AWS_ECR_URL:bluengo-worker
