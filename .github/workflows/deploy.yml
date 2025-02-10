@@ -21,6 +21,9 @@ jobs:
           pwd
           ls -la
 
+          #comprobar repo:
+          echo $AWS_ECR_URL
+
           # Construir imagenes
           docker build -t $AWS_ECR_URL/bluengo-server:latest -f Dockerfile.server .
           docker build -t $AWS_ECR_URL/bluengo-worker:latest -f Dockerfile.worker .
