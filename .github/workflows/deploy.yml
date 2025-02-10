@@ -5,10 +5,15 @@ on:
 
 jobs:
   build-and-releases:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-18.04  # UPGRADE THIS!
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.17'  # Change this to your desired Go version
 
       - name: Build and Push Docker Images
         run: |
