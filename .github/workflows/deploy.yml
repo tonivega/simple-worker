@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop
-      - feature/
 
 env:
   AWS_REGION: eu-central-1
