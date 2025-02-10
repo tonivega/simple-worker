@@ -32,12 +32,12 @@ jobs:
 
     - name: Build executable for ${{ matrix.os }}-${{ matrix.arch }}
       run: |
-        mkdir -p bluengo-executables  # Create the folder if it doesn't exist
+        mkdir -p bluengo-executables  # Create the folder in the workspace
         GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o bluengo-executables/bluengo-${{ matrix.os }}-${{ matrix.arch }} .
         echo "Built bluengo-${{ matrix.os }}-${{ matrix.arch }}"
 
     - name: Upload the artifact (executables)
       uses: actions/upload-artifact@v4
       with:
-        name: bluengo-executables
+        name: bluengo-executables-${{ matrix.os }}-${{ matrix.arch }}
         path: bluengo-executables/*
