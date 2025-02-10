@@ -22,9 +22,9 @@ jobs:
           ls -la
 
           # Construir imagenes
-          docker build -t $AWS_ECR_URL:bluengo-server -f Dockerfile.server .
-          docker build -t $AWS_ECR_URL:bluengo-worker -f Dockerfile.worker .
+          docker build -t $AWS_ECR_URL/bluengo-server:latest -f Dockerfile.server .
+          docker build -t $AWS_ECR_URL/bluengo-worker:latest -f Dockerfile.worker .
 
           # Push imagenes
-          docker push $AWS_ECR_URL:bluengo-server
-          docker push $AWS_ECR_URL:bluengo-worker
+          docker push $AWS_ECR_URL/bluengo-server:latest
+          docker push $AWS_ECR_URL/bluengo-worker:latest
