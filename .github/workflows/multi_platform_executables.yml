@@ -99,22 +99,22 @@ jobs:
 
     # Step to download the artifact you uploaded earlier
     - name: Download Executables for Linux AMD64
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: bluengo-executables-linux-amd64
 
     - name: Download Executables for Linux ARM64
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: bluengo-executables-linux-arm64
 
     - name: Download Executables for Windows AMD64
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: bluengo-executables-windows-amd64
 
     - name: Download Executables for Windows ARM64
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: bluengo-executables-windows-arm64
 
