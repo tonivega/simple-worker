@@ -42,8 +42,8 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-            name: binaries-${{ matrix.os }}-${{ matrix.arch }}
-            path: dist/*
+          name: binaries-${{ matrix.os }}-${{ matrix.arch }}
+          path: dist/*
 
   release:
     name: Create GitHub Release
@@ -53,11 +53,20 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Asegura que se obtienen todos los tags
 
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
           path: dist/
+
+      - name: Create and Push Tag
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git tag ${{ env.NEW_VERSION }}
+          git push origin ${{ env.NEW_VERSION }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
