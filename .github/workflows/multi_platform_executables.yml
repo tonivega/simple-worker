@@ -8,44 +8,44 @@ on:
     - 'v*'
 
 jobs:
-  # build:
-  #   runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-  #   strategy:
-  #     matrix:
-  #       os: [ linux, windows ] # Sistema operativo
-  #       arch: [ amd64, arm64 ] # Arquitectura
-  #     fail-fast: false
+    strategy:
+      matrix:
+        os: [ linux, windows ] # Sistema operativo
+        arch: [ amd64, arm64 ] # Arquitectura
+      fail-fast: false
 
-  #   steps:
-  #   - name: Check out repository
-  #     uses: actions/checkout@v3
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
 
-  #   - name: Set up Go
-  #     uses: actions/setup-go@v3
-  #     with:
-  #       go-version: '1.23.6'
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.23.6'
 
-  #   - name: Install dependencies (Linux only)
-  #     if: matrix.os == 'linux'
-  #     run: |
-  #       sudo apt-get update
-  #       sudo apt-get install -y gcc libc6-dev libglib2.0-dev
+    - name: Install dependencies (Linux only)
+      if: matrix.os == 'linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc libc6-dev libglib2.0-dev
 
-  #   - name: Build executable for ${{ matrix.os }}-${{ matrix.arch }}
-  #     run: |
-  #       mkdir -p bluengo-executables  # Create the folder in the workspace
-  #       GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o bluengo-executables/bluengo-${{ matrix.os }}-${{ matrix.arch }} .
-  #       echo "Built bluengo-${{ matrix.os }}-${{ matrix.arch }}"
+    - name: Build executable for ${{ matrix.os }}-${{ matrix.arch }}
+      run: |
+        mkdir -p bluengo-executables  # Create the folder in the workspace
+        GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o bluengo-executables/bluengo-${{ matrix.os }}-${{ matrix.arch }} .
+        echo "Built bluengo-${{ matrix.os }}-${{ matrix.arch }}"
 
-  #   - name: Upload the artifact (executables)
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: bluengo-executables-${{ matrix.os }}-${{ matrix.arch }}
-  #       path: bluengo-executables/*
+    - name: Upload the artifact (executables)
+      uses: actions/upload-artifact@v4
+      with:
+        name: bluengo-executables-${{ matrix.os }}-${{ matrix.arch }}
+        path: bluengo-executables/*
 
   create-release:
-    # needs: build
+    needs: build
     if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
 
@@ -53,7 +53,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0
+        fetch-depth: 0 # Important! This clones the whole repository including the tags.
 
     - name: Get previous tag
       id: previoustag
