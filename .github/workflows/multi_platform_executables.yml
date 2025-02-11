@@ -44,30 +44,30 @@ jobs:
         name: bluengo-executables-${{ matrix.os }}-${{ matrix.arch }}
         path: bluengo-executables/*
 
-create-release:
-  needs: build
-  if: startsWith(github.ref, 'refs/tags/v')
-  runs-on: ubuntu-latest
+  create-release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
 
-  steps:
-  - name: Checkout code
-    uses: actions/checkout@v3
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-  - name: Set up GitHub Release
-    uses: actions/create-release@v1
-    with:
-      tag_name: ${{ github.ref }}
-      release_name: Release ${{ github.ref }}
-      body: "Automated release for version ${{ github.ref }}"
-      draft: false
-      prerelease: false
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Set up GitHub Release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: "Automated release for version ${{ github.ref }}"
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  - name: Upload Executables to Release
-    uses: actions/upload-release-asset@v1
-    with:
-      upload_url: ${{ steps.create-release.outputs.upload_url }}
-      asset_path: bluengo-executables/*
-      asset_name: bluengo-${{ matrix.os }}-${{ matrix.arch }}
-      asset_content_type: application/gzip
+    - name: Upload Executables to Release
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        asset_path: bluengo-executables/*
+        asset_name: bluengo-${{ matrix.os }}-${{ matrix.arch }}
+        asset_content_type: application/gzip
