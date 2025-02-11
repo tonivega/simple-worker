@@ -82,6 +82,9 @@ jobs:
         git tag ${{ steps.semver.outputs.next-version }}
         git push origin ${{ steps.semver.outputs.next-version }}
 
+    - name: Debug next-version output
+      run: echo "Next version: ${{ steps.semver.outputs.next-version }}"
+
     - name: Set up GitHub Release
       uses: actions/create-release@v1
       with:
