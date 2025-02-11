@@ -1,4 +1,4 @@
-name: Build and Push Docker Worker Server Image
+name: Build and Push Docker Server Image
 on:
   push:
     branches:

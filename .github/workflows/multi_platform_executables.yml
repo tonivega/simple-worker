@@ -46,7 +46,7 @@ jobs:
 
   create-release:
     needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
 
     steps:
