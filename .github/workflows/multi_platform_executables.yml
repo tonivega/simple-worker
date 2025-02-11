@@ -97,26 +97,16 @@ jobs:
       env:
         GITHUB_TOKEN: ${{secrets.AUTH_TOKEN}}
 
-    # Step to download the artifact you uploaded earlier
-    - name: Download Executables for Linux AMD64
+    - name: Download all executables artifacts
       uses: actions/download-artifact@v4
       with:
-        name: bluengo-executables-linux-amd64
+        merge-multiple: true
+        path: bluengo-executables
 
-    - name: Download Executables for Linux ARM64
-      uses: actions/download-artifact@v4
-      with:
-        name: bluengo-executables-linux-arm64
-
-    - name: Download Executables for Windows AMD64
-      uses: actions/download-artifact@v4
-      with:
-        name: bluengo-executables-windows-amd64
-
-    - name: Download Executables for Windows ARM64
-      uses: actions/download-artifact@v4
-      with:
-        name: bluengo-executables-windows-arm64
+    # List downloaded files for debugging
+    - name: List downloaded files
+      run: |
+        ls -lR bluengo-executables/
 
     - name: Upload Executables to Release
       run: |
