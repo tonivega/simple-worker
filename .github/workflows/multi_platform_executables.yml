@@ -53,12 +53,28 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Get previous tag
+      id: previoustag
+      uses: 'WyriHaximus/github-action-get-previous-tag@v1'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Get next version
+      id: semver
+      uses: 'WyriHaximus/github-action-next-semvers@v1'
+      with:
+        version: ${{ steps.previoustag.outputs.tag }}
+        release-type: minor # You can choose 'major', 'minor', or 'patch'
+
+    - name: Set the new version as a tag
+      run: git tag ${{ steps.semver.outputs.next-version }} && git push origin ${{ steps.semver.outputs.next-version }}
+
     - name: Set up GitHub Release
       uses: actions/create-release@v1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: "Automated release for version ${{ github.ref }}"
+        tag_name: ${{ steps.semver.outputs.next-version }}
+        release_name: Release ${{ steps.semver.outputs.next-version }}
+        body: "Automated release for version ${{ steps.semver.outputs.next-version }}"
         draft: false
         prerelease: false
       env:
