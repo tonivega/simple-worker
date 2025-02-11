@@ -90,6 +90,8 @@ jobs:
         body: "Automated release for version ${{ steps.semver.outputs.next-version }}"
         draft: false
         prerelease: false
+      env:
+        GITHUB_TOKEN: ${{secrets.AUTH_TOKEN}}
 
     - name: Package the executables into a ZIP file
       run: |
