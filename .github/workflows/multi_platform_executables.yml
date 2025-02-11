@@ -59,8 +59,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    # - name: Debug previous tag
-    #   run: echo "Previous tag: ${{ steps.previoustag.outputs.tag }}"
+    - name: Debug previous tag
+      run: echo "Previous tag: ${{ steps.previoustag.outputs.tag }}"
 
     - name: Get next version
       id: semver
@@ -71,8 +71,8 @@ jobs:
 
     - name: Set the new version as a tag
       run: |
-      git tag ${{ steps.semver.outputs.next-version }}  # Create the tag
-      git push origin ${{ steps.semver.outputs.next-version }}  # Push the tag to GitHub
+        git tag ${{ steps.semver.outputs.next-version }}  # Create the tag
+        git push origin ${{ steps.semver.outputs.next-version }}  # Push the tag to GitHub
 
     - name: Set up GitHub Release
       uses: actions/create-release@v1
