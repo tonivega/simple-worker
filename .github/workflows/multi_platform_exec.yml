@@ -28,13 +28,6 @@ jobs:
         with:
           go-version: stable
 
-      - name: Increase Semantic Version
-        id: version
-        run: |
-          latest_tag=$(git describe --tags --abbrev=0 || echo "v0.0.0")
-          new_version=$(echo $latest_tag | awk -F. -v OFS=. '{$NF += 1 ; print}')
-          echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
-
       - name: Build Binary
         run: |
           GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o dist/myapp-${{ matrix.os }}-${{ matrix.arch }}
@@ -56,12 +49,19 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Asegura que se obtienen todos los tags
+          fetch-depth: 0
 
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
           path: dist/
+
+      - name: Increase Semantic Version
+        id: version
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0 || echo "v0.0.0")
+          new_version=$(echo $latest_tag | awk -F. -v OFS=. '{$NF += 1 ; print}')
+          echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
 
       - name: Create and Push Tag
         env:
