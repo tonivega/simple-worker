@@ -60,7 +60,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Debug previous tag
-      run: echo "Previous tag: ${{ steps.previoustag.outputs.tag }}"
+      run: |
+        if [ -z "${{ steps.previoustag.outputs.tag }}" ]; then
+          echo "No previous tag found. This might be the first release."
+        else
+          echo "Previous tag: ${{ steps.previoustag.outputs.tag }}"
+        fi
 
     - name: Get next version
       id: semver
