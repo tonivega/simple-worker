@@ -109,6 +109,12 @@ jobs:
     #     asset_name: bluengo-executables-${{ github.run_id }}.zip
     #     asset_content_type: application/zip
 
+    # Step to download the artifact you uploaded earlier
+    - name: Download Executables Artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: bluengo-executables-${{ matrix.os }}-${{ matrix.arch }}
+
     - name: Upload Executables to Release
       run: |
         for file in bluengo-executables/*; do
@@ -117,6 +123,6 @@ jobs:
             curl -XPOST -H "Authorization: token ${{ secrets.AUTH_TOKEN }}" \
             -H "Content-Type: application/octet-stream" \
             --data-binary @"$file" \
-            "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ steps.create-release.outputs.id }}/assets?name=$(basename $file)"
+            "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ steps.create_release_id.outputs.id }}/assets?name=$(basename $file)"
           fi
         done
