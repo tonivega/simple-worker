@@ -1,0 +1,71 @@
+name: Build and Release Go Binaries
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Go Binaries
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [linux, windows]
+        arch: [amd64, arm64]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - name: Increase Semantic Version
+        id: version
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0 || echo "v0.0.0")
+          new_version=$(echo $latest_tag | awk -F. -v OFS=. '{$NF += 1 ; print}')
+          echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
+
+      - name: Build Binary
+        run: |
+          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o dist/myapp-${{ matrix.os }}-${{ matrix.arch }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: dist/*
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: binaries
+          path: dist/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.NEW_VERSION }}
+          name: Release ${{ env.NEW_VERSION }}
+          files: dist/*
+          body: "Automated release ${{ env.NEW_VERSION }}"
+          draft: false
+          prerelease: false
