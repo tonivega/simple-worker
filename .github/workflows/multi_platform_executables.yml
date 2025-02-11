@@ -59,8 +59,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Debug previous tag
-      run: echo "Previous tag: ${{ steps.previoustag.outputs.tag }}"
+    # - name: Debug previous tag
+    #   run: echo "Previous tag: ${{ steps.previoustag.outputs.tag }}"
 
     - name: Get next version
       id: semver
