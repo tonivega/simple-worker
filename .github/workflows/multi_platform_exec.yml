@@ -3,7 +3,7 @@ name: Build and Release Go Binaries
 on:
   push:
     branches:
-      - main
+      - working3
   pull_request:
     branches:
       - main
