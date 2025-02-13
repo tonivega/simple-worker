@@ -1,0 +1,121 @@
+name: Build Executables for Multiple Platforms
+
+on:
+  push:
+    branches:
+    - develop
+    tags:
+    - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [ linux, windows ] # Sistema operativo
+        arch: [ amd64, arm64 ] # Arquitectura
+      fail-fast: false
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.23.6'
+
+    - name: Install dependencies (Linux only)
+      if: matrix.os == 'linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc libc6-dev libglib2.0-dev
+
+    - name: Build executable for ${{ matrix.os }}-${{ matrix.arch }}
+      run: |
+        mkdir -p bluengo-executables  # Create the folder in the workspace
+        GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o bluengo-executables/bluengo-${{ matrix.os }}-${{ matrix.arch }} .
+        echo "Built bluengo-${{ matrix.os }}-${{ matrix.arch }}"
+
+    - name: Upload the artifact (executables)
+      uses: actions/upload-artifact@v4
+      with:
+        name: bluengo-executables-${{ matrix.os }}-${{ matrix.arch }}
+        path: bluengo-executables/*
+
+  create-release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Important! This clones the whole repository including the tags.
+
+    - name: Get previous tag
+      id: previoustag
+      uses: 'WyriHaximus/github-action-get-previous-tag@v1'
+
+    # - name: Debug
+    #   run: export
+
+    # - name: Debug previous tag
+    #   run: |
+    #     if [ -z "${{ steps.previoustag.outputs.tag }}" ]; then
+    #       echo "No previous tag found. This might be the first release."
+    #     else
+    #       echo "Previous tag: ${{ steps.previoustag.outputs.tag }}"
+    #     fi
+
+    - name: Get next version
+      id: semver
+      uses: 'WyriHaximus/github-action-next-semvers@v1'
+      with:
+        version: ${{ steps.previoustag.outputs.tag }}
+        release-type: minor # You can choose 'major', 'minor', or 'patch'
+
+    - name: Set the new version as a tag
+      run: |
+        git tag ${{ steps.semver.outputs.minor }}  # Use minor, patch, or major
+        git push origin ${{ steps.semver.outputs.minor }}
+
+    # - name: Debug next-version output
+    #   run: echo "Next version is ${{ steps.semver.outputs.minor }}"
+
+    - name: Set up GitHub Release
+      id: create_release_id
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ steps.semver.outputs.minor}}
+        release_name: Release ${{ steps.semver.outputs.minor}}
+        body: "Automated release for version ${{ steps.semver.outputs.minor }}"
+        draft: false
+        prerelease: false
+      # env:
+      #   GITHUB_TOKEN: ${{secrets.AUTH_TOKEN}}
+
+    - name: Download all executables artifacts
+      uses: actions/download-artifact@v4
+      with:
+        merge-multiple: true
+        path: bluengo-executables
+
+    # List downloaded files for debugging
+    - name: List downloaded files
+      run: |
+        ls -lR bluengo-executables/
+
+    - name: Upload Executables to Release
+      run: |
+        for file in bluengo-executables/*; do
+          if [ -f "$file" ]; then
+            echo "Uploading $file..."
+            curl -XPOST -H "Authorization: token ${{ secrets.AUTH_TOKEN }}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @"$file" \
+            "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ steps.create_release_id.outputs.id }}/assets?name=$(basename $file)"
+          fi
+        done
