@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: distcc
+  labels:
+    app: distcc
+spec:
+  selector:
+    matchLabels:
+      app: distcc
+  template:
+    metadata:
+      labels:
+        app: distcc
+    spec:
+      containers:
+      - name: distcc
+        image: bensuperpc/distcc:debian
+        command: ["/usr/bin/distccd", "--daemon", "--no-detach", "--user", "distcc", "--log-level=info"]
+        ports:
+        - containerPort: 3632
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "256Mi"
+          limits:
+            cpu: "2000m"
+            memory: "1Gi"

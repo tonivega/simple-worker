@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: distcc-deployment
+spec:
+  replicas: 3  # Ajusta esto según la capacidad que necesites
+  selector:
+    matchLabels:
+      app: distcc
+  template:
+    metadata:
+      labels:
+        app: distcc
+    spec:
+      containers:
+      - name: distcc
+        image: bensuperpc/distcc  # Usa la etiqueta que necesites (bensuperpc/distcc:latest)
+        ports:
+        - containerPort: 3632  # Puerto estándar de distcc
