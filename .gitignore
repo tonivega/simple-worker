@@ -1,0 +1,41 @@
+Ignorar directorios y archivos de Terraform
+.terraform/
+*.tfvars
+terraform_grv/
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+terraformold/
+terraform.log
+terraform.txt
+
+Ignorar directorios y archivos de Terragrunt
+.terragrunt-cache
+
+Ignorar configuraciones de editor (VSCode, por ejemplo)
+.vscode/
+
+Ignorar archivos de sistema (macOS, Windows)
+.DS_Store
+Thumbs.db
+
+Ignorar archivos temporales y de logs
+*.log
+*.tmp
+
+Ignorar archivos binarios y dependencias
+*.exe
+*.dll
+*.so
+*.tar.gz
+*.zip
+
+Ignorar archivos de compilación o construcción (si aplica)
+build/
+dist/
+
+Ignorar otros archivos específicos de la plataforma
+*.bak
+
+node_modules/
+package-lock.json
