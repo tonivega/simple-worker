@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
       - name: distcc
-        image: bensuperpc/distcc:debian
-        command: ["/usr/bin/distccd", "--daemon", "--no-detach", "--user", "distcc", "--log-level=info", "sleep 0"]
+        image: bensuperpc/distcc:ubuntu-22.04
+        command: ["sleep", "0"]
         ports:
         - containerPort: 3632
           hostPort: 55000
