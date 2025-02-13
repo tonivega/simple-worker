@@ -2,21 +2,23 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: distcc
+  namespace: default
   labels:
-    app: distcc
+    app: distcc-devtool
 spec:
   selector:
     matchLabels:
-      app: distcc
+      name: distcc-devtool
   template:
     metadata:
       labels:
-        app: distcc
+        name: distcc-devtool
     spec:
       containers:
       - name: distcc
         image: bensuperpc/distcc:ubuntu-22.04
-        command: ["sleep", "0"]
+        args: ["sleep", "0"]
         ports:
         - containerPort: 3632
           hostPort: 55000
+          protocol: TCP
