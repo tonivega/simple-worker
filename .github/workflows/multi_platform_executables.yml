@@ -94,8 +94,8 @@ jobs:
         body: "Automated release for version ${{ steps.semver.outputs.minor }}"
         draft: false
         prerelease: false
-      # env:
-      #   GITHUB_TOKEN: ${{secrets.AUTH_TOKEN}}
+      env:
+        GITHUB_TOKEN: ${{secrets.AUTH_TOKEN}}
 
     - name: Download all executables artifacts
       uses: actions/download-artifact@v4
