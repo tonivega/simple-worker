@@ -16,13 +16,7 @@ spec:
       containers:
       - name: distcc
         image: bensuperpc/distcc:debian
-        command: ["/usr/bin/distccd", "--daemon", "--no-detach", "--user", "distcc", "--log-level=info"]
+        command: ["/usr/bin/distccd", "--daemon", "--no-detach", "--user", "distcc", "--log-level=info", "sleep 0"]
         ports:
         - containerPort: 3632
-        resources:
-          requests:
-            cpu: "500m"
-            memory: "256Mi"
-          limits:
-            cpu: "2000m"
-            memory: "1Gi"
+          hostPort: 55000
